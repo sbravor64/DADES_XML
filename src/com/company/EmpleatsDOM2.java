@@ -29,7 +29,6 @@ public class EmpleatsDOM2 {
 
             for (int i = 0; i < nlist.getLength() ; i++) {
                 Node nNode = nlist.item(i);
-
                 if(nNode.getNodeType() == Node.ELEMENT_NODE){
                     Element element = (Element) nNode;
                     System.out.print("USERNAME: " + element.getElementsByTagName("Username").item(0).getTextContent());
