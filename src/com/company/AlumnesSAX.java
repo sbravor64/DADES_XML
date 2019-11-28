@@ -21,23 +21,31 @@ class AlumneHandler extends DefaultHandler{
     boolean bCiutat = false;
     boolean bAssignatures = false;
 
-
     public void startElement (String uri, String localName, String qName, Attributes attributes) {
-        if(qName.equalsIgnoreCase("Alumne")){
-            String edat = attributes.getValue("edat");
-            System.out.println("Edat: " + edat);
-        } else if(qName.equalsIgnoreCase("DNI")){
-            bDNI = true;
-        } else if(qName.equalsIgnoreCase("Nom")){
-            bNom = true;
-        } else if(qName.equalsIgnoreCase("Cognom1")){
-            bCognom1 = true;
-        } else if(qName.equalsIgnoreCase("Cognom2")){
-            bCognom2 = true;
-        } else if(qName.equalsIgnoreCase("Ciutat")){
-            bCiutat = true;
-        } else if(qName.equalsIgnoreCase("Assignatures")){
-            bAssignatures = true;
+        switch (qName.toLowerCase()){
+            case "alumne":
+                System.out.println("----------------------");
+                String edat = attributes.getValue("edat");
+                System.out.println("Edat: " + edat);
+                break;
+            case "dni":
+                bDNI = true;
+                break;
+            case "nom":
+                bNom = true;
+                break;
+            case "cognom1":
+                bCognom1 = true;
+                break;
+            case  "cognom2":
+                bCognom2 = true;
+                break;
+            case "ciutat":
+                bCiutat = true;
+                break;
+            case "assignatures":
+                bAssignatures = true;
+                break;
         }
     }
 
@@ -62,6 +70,7 @@ class AlumneHandler extends DefaultHandler{
             bAssignatures = false;
         }
     }
+
 }
 
 public class AlumnesSAX {
@@ -72,7 +81,5 @@ public class AlumnesSAX {
         SAXParser parser= saxParserFactory.newSAXParser();
         AlumneHandler alumneHandler = new AlumneHandler();
         parser.parse(inputFile, alumneHandler);
-
     }
-
 }
