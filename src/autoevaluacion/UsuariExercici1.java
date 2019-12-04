@@ -19,70 +19,63 @@ import java.io.File;
 
 public class UsuariExercici1 {
 
-    class PlatsHandler extends DefaultHandler {
-        boolean bDNI = false;
-        boolean bNom = false;
-        boolean bCognom1 = false;
-        boolean bCognom2 = false;
-        boolean bCiutat = false;
-        boolean bAssignatures = false;
+    static File inputFIle = new File("C:\\Users\\Usuario\\Documents\\ANDRES\\accesDades\\cartaplats.xml");
+    //static File inputFIle = new File("/home/dam2a/Documents/accesadades/autoevaluacio/cartaplats.xml");
 
-        public void startElement (String uri, String localName, String qName, Attributes attributes) {
-            switch (qName.toLowerCase()){
-                case "alumne":
-                    System.out.println("----------------------");
-                    String edat = attributes.getValue("edat");
-                    System.out.println("Edat: " + edat);
-                    break;
-                case "dni":
-                    bDNI = true;
-                    break;
-                case "nom":
-                    bNom = true;
-                    break;
-                case "cognom1":
-                    bCognom1 = true;
-                    break;
-                case  "cognom2":
-                    bCognom2 = true;
-                    break;
-                case "ciutat":
-                    bCiutat = true;
-                    break;
-                case "assignatures":
-                    bAssignatures = true;
-                    break;
-            }
+    public static  Document createDoc(){
+        Document document = null;
+        try{
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputFIle);
+            document.getDocumentElement().normalize();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-        public void characters(char ch[], int start, int length){
-            if(bDNI){
-                System.out.println("DNI: " + new String(ch, start, length));
-                bDNI = false;
-            } else if(bNom){
-                System.out.println("NOM: " + new String(ch, start, length));
-                bNom = false;
-            } else if(bCognom1){
-                System.out.println("COGNOM 1: " + new String(ch, start, length));
-                bCognom1 = false;
-            } else if(bCognom2){
-                System.out.println("COGNOM 2: " + new String(ch, start, length));
-                bCognom2 = false;
-            } else if(bCiutat){
-                System.out.println("CIUTAT: " + new String(ch, start, length));
-                bCiutat = false;
-            } else if(bAssignatures){
-                System.out.println("ASSIGNATURES: " + new String(ch, start, length));
-                bAssignatures = false;
-            }
-        }
-
+        return document;
     }
 
-    public static void main(String[] args) throws ParserConfigurationException, TransformerException, SAXException {
-        File inputFile = new File("/home/dam2a/Documents/accesadades/XML/alumnos.xml");
-        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        SAXParser parser= saxParserFactory.newSAXParser();
+    public static void addElements(Document document) {
+        Element restaurant = document.getDocumentElement();
+        Element plat = document.createElement("plat");
+
+        Attr codi = document.createAttribute("codi");
+        codi.setValue("P7");
+        plat.setAttributeNode(codi);
+
+        Element descripcio = document.createElement("descripcio");
+        descripcio.appendChild(document.createTextNode("Spaghetti al pesto"));
+
+        Element categoria = document.createElement("categoria");
+        categoria.appendChild(document.createTextNode("Pasta"));
+
+        Element preu = document.createElement("preu");
+        preu.appendChild(document.createTextNode("8"));
+
+        plat.appendChild(categoria);
+        restaurant.appendChild(plat);
+        plat.appendChild(preu);
+        plat.appendChild(descripcio);
+
+        saveFile(document);
+    }
+
+    public static void saveFile(Document doc){
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            DOMSource domSource = new DOMSource(doc);
+            StreamResult streamResult = new StreamResult(inputFIle);
+            transformer.transform(domSource, streamResult);
+        }catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void main(String[] args) {
+        try{
+            addElements(createDoc());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
